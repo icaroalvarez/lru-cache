@@ -24,8 +24,13 @@ TEST_CASE("Inserting new element when cache is full with 1000 elements")
                     return cache.put("new_element_key", "new_element_value");
                 };
 
-    BENCHMARK("get element")
+    BENCHMARK("get first element")
                 {
-                    return cache.get("500");
+                    return cache.get("0");
+                };
+
+    BENCHMARK("get last element")
+                {
+                    return cache.get("new_element_key");
                 };
 }

@@ -9,35 +9,29 @@ void LruCache::put(const std::string& key, const std::string& value)
 {
     if(elements.size() >= capacity)
     {
-        keyInsertions.erase(insertions.front()->first);
-        // average of O(1) time complexity for erase operation
-        elements.erase(insertions.front());
-        // pop front is constant time complexity for a list
-        insertions.pop_front();
+        elements.erase(insertions.front()); // O(1)
+        insertions.pop_front(); // O(1)
     }
-    const auto itPair{elements.emplace(std::make_pair(key, value))};
-    insertions.emplace_back(itPair.first);
-
-    auto insertionIt{std::prev(insertions.end())};
-    keyInsertions.emplace(std::make_pair(key, insertionIt));
+    insertions.emplace_back(key); // O(1)
+    const auto lastIterator{std::prev(insertions.end())};
+    auto valueInsertionIterator{std::make_pair(value, lastIterator)};
+    auto element{std::make_pair(key, std::move(valueInsertionIterator))};
+    elements.emplace(std::move(element)); // average O(1), worst case O(N)
 }
 
 std::string LruCache::get(const std::string& key)
 {
     std::string value;
-    const auto& it{elements.find(key)};
-    //auto test_value = it->second;
+    const auto& it{elements.find(key)}; // average O(1), worst case O(N)
     if(it not_eq elements.end())
     {
-        value = elements.at(key);
+        auto& elementPair{elements.at(key)};
+        value = elementPair.first;
 
-        auto insertionsIt = keyInsertions.find(key);
-        insertions.erase(insertionsIt->second);
-        insertions.emplace_back(it);
-        keyInsertions.erase(insertionsIt);
-
-        auto insertionIt = std::prev(insertions.end());
-        keyInsertions.emplace(std::make_pair(key, insertionIt));
+        insertions.erase(elementPair.second); // O(1)
+        insertions.emplace_back(key); // O(1)
+        const auto& insertionIt{std::prev(insertions.end())};
+        elementPair.second = insertionIt;
     }
     return value;
 }

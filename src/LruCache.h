@@ -12,10 +12,9 @@ public:
 
 private:
     int capacity;
-    std::unordered_map<std::string, std::string> elements;
-    using ElementsIterator = std::unordered_map<std::string, std::string>::iterator;
-    using Insertions = std::list<ElementsIterator>;
+    using Insertions = std::list<std::string>;
     Insertions insertions;
-    std::unordered_map<std::string, Insertions::iterator> keyInsertions;
+    using ValueInsertionIterator = std::pair<std::string, Insertions::iterator>;
+    std::unordered_map<std::string, ValueInsertionIterator> elements;
 };
 
