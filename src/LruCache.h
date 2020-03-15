@@ -4,7 +4,7 @@
 class LruCache
 {
 public:
-    LruCache(int capacity);
+    explicit LruCache(int capacity);
 
     void put(const std::string& key, const std::string& value);
 
@@ -13,5 +13,9 @@ public:
 private:
     int capacity;
     std::unordered_map<std::string, std::string> elements;
-    std::list<std::unordered_map<std::string, std::string>::iterator> iterators;
+    using ElementsIterator = std::unordered_map<std::string, std::string>::iterator;
+    using Insertions = std::list<ElementsIterator>;
+    Insertions insertions;
+    std::unordered_map<std::string, Insertions::iterator> keyInsertions;
 };
+
