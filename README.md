@@ -23,3 +23,6 @@ make
 ```bash
 ./test_benchmarks/test_benchmarks
 ```
+
+### TODO
+* Generalize with key and value templates (now only <std::string, std::string> key values are supported).
